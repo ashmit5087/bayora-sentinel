@@ -1,0 +1,37 @@
+# Phase 0 spike: llama.cpp server with CUDA, two slots.
+# NOT the hardened config. Published port is for the spike only.
+#
+#   docker compose up -d
+#   docker compose logs -f model     # wait until the server reports it is listening
+#
+# CTX is the TOTAL context; each of the 2 slots gets half. If you raise
+# --filler-words in timing.py, raise CTX too (e.g. CTX=16384).
+name: sentinel-spike
+
+services:
+  model:
+    image: ghcr.io/ggml-org/llama.cpp:server-cuda
+    command:
+      - "-m"
+      - "/models/qwen2.5-1.5b-instruct-q4_k_m.gguf"
+      - "--host"
+      - "0.0.0.0"
+      - "--port"
+      - "8080"
+      - "-ngl"
+      - "99"
+      - "-c"
+      - "${CTX:-8192}"
+      - "--parallel"
+      - "2"
+    volumes:
+      - ./models:/models:ro
+    ports:
+      - "127.0.0.1:8080:8080"
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]

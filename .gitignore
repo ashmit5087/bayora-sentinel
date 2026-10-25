@@ -1,0 +1,17 @@
+.env
+__pycache__/
+*.pyc
+.pytest_cache/
+.venv/
+node_modules/
+dist/
+
+# model weights and run output
+spike/models/
+spike/out/
+*.gguf
+data/
+*.pem
+secrets/*
+!secrets/.gitkeep
+results/*.json

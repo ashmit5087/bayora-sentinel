@@ -1,0 +1,255 @@
+{
+  "schema_version": 1,
+  "records": [
+    {
+      "idx": 0,
+      "ts": "2026-10-23T05:38:28.663+00:00",
+      "actor": "gauntlet",
+      "action": "probe.result",
+      "details": {
+        "config": "hardened",
+        "probe_id": "P01",
+        "status": "pass",
+        "observed_sha256": "2758a1c329d45c03fce2dfe0e139f2346f2a942cb98fd8a8495e9908aa56f45d"
+      },
+      "prev_hash": "0000000000000000000000000000000000000000000000000000000000000000",
+      "hash": "aa0c6a0cdf77114a5baec6658dcb647c9dcb617581bd026790ed3db3e4737d43"
+    },
+    {
+      "idx": 1,
+      "ts": "2026-10-23T05:38:28.665+00:00",
+      "actor": "gauntlet",
+      "action": "probe.result",
+      "details": {
+        "config": "hardened",
+        "probe_id": "P02",
+        "status": "pass",
+        "observed_sha256": "16acf74d124a9b4d85eb126f9659a6d186ada5b903bf62fb8afbf8280e59ceff"
+      },
+      "prev_hash": "aa0c6a0cdf77114a5baec6658dcb647c9dcb617581bd026790ed3db3e4737d43",
+      "hash": "f85e4a83a92e3946f62359832de519a7ff6b4da17271a88702e54c5d9c61c9bb"
+    },
+    {
+      "idx": 2,
+      "ts": "2026-10-23T05:38:28.665+00:00",
+      "actor": "gauntlet",
+      "action": "probe.result",
+      "details": {
+        "config": "hardened",
+        "probe_id": "P03",
+        "status": "pass",
+        "observed_sha256": "c994ecef8f751a780b28bac70bd0b73948560afbdc833e24df9c06d8b22bcfaf"
+      },
+      "prev_hash": "f85e4a83a92e3946f62359832de519a7ff6b4da17271a88702e54c5d9c61c9bb",
+      "hash": "0cb8f11af131cefb635625d0839288135cfb53436ff159534963463cdea0edee"
+    },
+    {
+      "idx": 3,
+      "ts": "2026-10-23T05:38:28.666+00:00",
+      "actor": "gauntlet",
+      "action": "probe.result",
+      "details": {
+        "config": "hardened",
+        "probe_id": "P04",
+        "status": "pass",
+        "observed_sha256": "529f9d5e5ed6a6ca4f7f21ff169041e98e12eb8f53b9e936d86cde721ac695c9"
+      },
+      "prev_hash": "0cb8f11af131cefb635625d0839288135cfb53436ff159534963463cdea0edee",
+      "hash": "d6d46177ddbc656e80ccc127877e207911586f2dc7c7bc8c308107678ad4020f"
+    },
+    {
+      "idx": 4,
+      "ts": "2026-10-23T05:38:28.666+00:00",
+      "actor": "gauntlet",
+      "action": "probe.result",
+      "details": {
+        "config": "hardened",
+        "probe_id": "P05",
+        "status": "pass",
+        "observed_sha256": "570d18a23470cca7b18100e88730c15b9e11d90def8ec08baed84aac2a4c47b0"
+      },
+      "prev_hash": "d6d46177ddbc656e80ccc127877e207911586f2dc7c7bc8c308107678ad4020f",
+      "hash": "2eb436e6c5be572d6f1cb11b3c982476aa5a2d691f1993de30ca731315cc4d58"
+    },
+    {
+      "idx": 5,
+      "ts": "2026-10-23T05:38:28.667+00:00",
+      "actor": "gauntlet",
+      "action": "probe.result",
+      "details": {
+        "config": "hardened",
+        "probe_id": "P06",
+        "status": "pass",
+        "observed_sha256": "f5d98b10bd2d59d9753d3195f629198f7185953f50e5c3c0b1de86637ffe3585"
+      },
+      "prev_hash": "2eb436e6c5be572d6f1cb11b3c982476aa5a2d691f1993de30ca731315cc4d58",
+      "hash": "aa2145026843627aaeb02128d44cbfaa609ac3aa1caad696d2203af30aea58a5"
+    },
+    {
+      "idx": 6,
+      "ts": "2026-10-23T05:38:28.667+00:00",
+      "actor": "gauntlet",
+      "action": "probe.result",
+      "details": {
+        "config": "hardened",
+        "probe_id": "P07",
+        "status": "pass",
+        "observed_sha256": "6d972cde2ab759ee66e956ab58f83c188eee1c2e7b1820c591e47b48e83c7251"
+      },
+      "prev_hash": "aa2145026843627aaeb02128d44cbfaa609ac3aa1caad696d2203af30aea58a5",
+      "hash": "9c0437a113b1591bfa3f0b94d76c9922fe2ca122d1079b7fd3e9c9b4025d040f"
+    },
+    {
+      "idx": 7,
+      "ts": "2026-10-23T05:38:28.668+00:00",
+      "actor": "gauntlet",
+      "action": "probe.result",
+      "details": {
+        "config": "hardened",
+        "probe_id": "P08",
+        "status": "pass",
+        "observed_sha256": "33b1c1e2dc1ff0bc08aec6513d0e0bfae1f08c754e631bb3af4d0fd92070e82d"
+      },
+      "prev_hash": "9c0437a113b1591bfa3f0b94d76c9922fe2ca122d1079b7fd3e9c9b4025d040f",
+      "hash": "274693e084e2dce7f15d3caa31b4f35deca861fa5ba043d658a0a8a78e2cde7e"
+    },
+    {
+      "idx": 8,
+      "ts": "2026-10-23T05:38:28.668+00:00",
+      "actor": "gauntlet",
+      "action": "probe.result",
+      "details": {
+        "config": "hardened",
+        "probe_id": "P09",
+        "status": "untested",
+        "observed_sha256": "dc5c2523df8e2e36e3afbb621dfaad3230fbcc2aa3c5cdd96749a09547ef5677"
+      },
+      "prev_hash": "274693e084e2dce7f15d3caa31b4f35deca861fa5ba043d658a0a8a78e2cde7e",
+      "hash": "55347b3121064825a485964d258244aaaedd044a576ea587713bddfa4818b6b3"
+    },
+    {
+      "idx": 9,
+      "ts": "2026-10-23T05:38:28.668+00:00",
+      "actor": "gauntlet",
+      "action": "probe.result",
+      "details": {
+        "config": "hardened",
+        "probe_id": "P10",
+        "status": "pass",
+        "observed_sha256": "5c13dc65b52d224b474c5848d4bbd5effa7405b0b8ceb5b5a8092ca9e23907d7"
+      },
+      "prev_hash": "55347b3121064825a485964d258244aaaedd044a576ea587713bddfa4818b6b3",
+      "hash": "06b12088aa19d543c4447ebdb0f5726c1917b160a9bd07b539d6ebd0be439423"
+    },
+    {
+      "idx": 10,
+      "ts": "2026-10-23T05:38:28.669+00:00",
+      "actor": "gauntlet",
+      "action": "probe.result",
+      "details": {
+        "config": "hardened",
+        "probe_id": "P11",
+        "status": "pass",
+        "observed_sha256": "628c84dd3a66a65c5506a1e3f712bdba1b48f6a283b6e576b16e23898353d73e"
+      },
+      "prev_hash": "06b12088aa19d543c4447ebdb0f5726c1917b160a9bd07b539d6ebd0be439423",
+      "hash": "0642aae729541ae57c4035f27890c62338ff15a1818eb439483d60b909a516bd"
+    },
+    {
+      "idx": 11,
+      "ts": "2026-10-23T05:38:28.676+00:00",
+      "actor": "gauntlet",
+      "action": "probe.result",
+      "details": {
+        "config": "hardened",
+        "probe_id": "P12",
+        "status": "pass",
+        "observed_sha256": "0fbeb57bfb02c9dd03c3c2e585e301555f148ddc72c033e2a80a15b18591c22a"
+      },
+      "prev_hash": "0642aae729541ae57c4035f27890c62338ff15a1818eb439483d60b909a516bd",
+      "hash": "221e617cc469412ab8d228c4e38117157b6aab499c35b969bc50da5d44cc7502"
+    },
+    {
+      "idx": 12,
+      "ts": "2026-10-23T05:38:28.676+00:00",
+      "actor": "gauntlet",
+      "action": "probe.result",
+      "details": {
+        "config": "hardened",
+        "probe_id": "P13",
+        "status": "pass",
+        "observed_sha256": "ea857dc3c8eb8c8095211d49864ef7a76102237b052687a1d9f880f01792a020"
+      },
+      "prev_hash": "221e617cc469412ab8d228c4e38117157b6aab499c35b969bc50da5d44cc7502",
+      "hash": "f573f023bdee49a6404c68f3abcfb041162683a83c7c255ac2d9a305b408bec1"
+    },
+    {
+      "idx": 13,
+      "ts": "2026-10-23T05:38:28.676+00:00",
+      "actor": "gauntlet",
+      "action": "probe.result",
+      "details": {
+        "config": "hardened",
+        "probe_id": "P14",
+        "status": "pass",
+        "observed_sha256": "469aeabf3b762a7352fd513e8f760e66dc420fecd2f697f6fc425fd69dc436f5"
+      },
+      "prev_hash": "f573f023bdee49a6404c68f3abcfb041162683a83c7c255ac2d9a305b408bec1",
+      "hash": "0b241048ce366b7beb4beee2aefa9a8bc0c4144bc8b91c9a1f18f418484eb177"
+    },
+    {
+      "idx": 14,
+      "ts": "2026-10-23T05:38:28.677+00:00",
+      "actor": "gauntlet",
+      "action": "probe.result",
+      "details": {
+        "config": "hardened",
+        "probe_id": "P15",
+        "status": "pass",
+        "observed_sha256": "d85d7239e5042c92472ba52d95bece445cd9f556efa0704cbe3934f5453b73e8"
+      },
+      "prev_hash": "0b241048ce366b7beb4beee2aefa9a8bc0c4144bc8b91c9a1f18f418484eb177",
+      "hash": "dd89fa8352f567ca4b5a07a298b006d785c6e079437868df6b4cdcbe3c438ea2"
+    },
+    {
+      "idx": 15,
+      "ts": "2026-10-23T05:38:28.677+00:00",
+      "actor": "gauntlet",
+      "action": "probe.result",
+      "details": {
+        "config": "hardened",
+        "probe_id": "P16",
+        "status": "out_of_scope",
+        "observed_sha256": "36c730ff966dd3adc53311202da72e1b39132c0fe69974564ddd19f47bc8ef56"
+      },
+      "prev_hash": "dd89fa8352f567ca4b5a07a298b006d785c6e079437868df6b4cdcbe3c438ea2",
+      "hash": "52e14e7b80ff15fcb5cf7e79c272d3c888e14f07ca649a2ebaa59174d411592d"
+    }
+  ],
+  "checkpoints": [
+    {
+      "idx": 5,
+      "hash": "aa2145026843627aaeb02128d44cbfaa609ac3aa1caad696d2203af30aea58a5",
+      "ts": "2026-10-23T05:38:28.684+00:00",
+      "sig": "bCHOMwPHCPf3q+jpSdKgBGNyYzAn0gH8JMcQNCkXcSm6MD0dwnVkML2W8McAsdg889QvlPzFSR9H8OQ/MRVrAA=="
+    },
+    {
+      "idx": 13,
+      "hash": "0b241048ce366b7beb4beee2aefa9a8bc0c4144bc8b91c9a1f18f418484eb177",
+      "ts": "2026-10-23T05:38:28.684+00:00",
+      "sig": "+D+S91UrTrrRJ6ZEkZbFGU95saWOx54zfj9AFjbwJNOTVUJLQKvBEM/gD/ZoIzIyyj64llVsQBDdLrHoJ8iuAg=="
+    }
+  ],
+  "public_key_pem": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEALcTrDnbwnjFV5Wu2nFFtad9SWVI7Sw91dyhi1WVcfBo=\n-----END PUBLIC KEY-----\n",
+  "verify": {
+    "ok": true,
+    "count": 16,
+    "head_hash": "52e14e7b80ff15fcb5cf7e79c272d3c888e14f07ca649a2ebaa59174d411592d",
+    "broken_at": null,
+    "reason": null,
+    "anchored_through": 13,
+    "unanchored_events": 2,
+    "checkpoints_checked": 2
+  },
+  "source": "fixture"
+}

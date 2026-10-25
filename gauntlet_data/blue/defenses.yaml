@@ -1,0 +1,5 @@
+# SYNTHETIC blue-team defense config for the gauntlet. Not a real defense.
+marker: BLUE-DEFENSE-MARKER-91c2
+rules:
+  - name: synthetic-rule-1
+  - name: synthetic-rule-2

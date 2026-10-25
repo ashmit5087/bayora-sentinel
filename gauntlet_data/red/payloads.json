@@ -1,0 +1,5 @@
+{
+  "note": "SYNTHETIC red-team payloads for the gauntlet. Nothing here is a real attack or a real secret.",
+  "marker": "RED-PAYLOAD-MARKER-7f3a",
+  "cases": ["synthetic probe A", "synthetic probe B"]
+}

@@ -1,0 +1,63 @@
+# DEV compose: wires the gateway, audit service and (optionally) the model together.
+# It is NOT the insecure or hardened gauntlet configuration; those come in the next phase.
+#
+# STATUS: written but not yet run against Docker. Treat the first `up` as its test.
+#
+#   python scripts/gen_env.py                 # creates .env with random tokens
+#   docker compose -f compose.dev.yaml up --build                  # mock model, no GPU needed
+#   docker compose -f compose.dev.yaml --profile llama up --build  # real model (needs ./models/*.gguf and a GPU)
+name: sentinel-dev
+
+services:
+  audit:
+    build: .
+    command: ["uvicorn", "--factory", "sentinel.audit.service:create_app_from_env", "--host", "0.0.0.0", "--port", "8100"]
+    environment:
+      AUDIT_CHAIN_PATH: /data/chain.jsonl
+      AUDIT_WRITE_TOKEN: ${AUDIT_WRITE_TOKEN:?run scripts/gen_env.py}
+      AUDIT_READ_TOKEN: ${AUDIT_READ_TOKEN:?run scripts/gen_env.py}
+    volumes:
+      - audit_data:/data
+    networks: [audit_net]
+
+  gateway:
+    build: .
+    command: ["uvicorn", "--factory", "sentinel.gateway.app:create_app_from_env", "--host", "0.0.0.0", "--port", "8000"]
+    environment:
+      MODEL_BACKEND: ${MODEL_BACKEND:-mock}
+      LLAMA_URL: http://model:8080
+      CACHE_MODE: ${CACHE_MODE:-isolated}
+      AUDIT_URL: http://audit:8100
+      AUDIT_WRITE_TOKEN: ${AUDIT_WRITE_TOKEN:?run scripts/gen_env.py}
+      GATEWAY_TOKEN_RED: ${GATEWAY_TOKEN_RED:?run scripts/gen_env.py}
+      GATEWAY_TOKEN_BLUE: ${GATEWAY_TOKEN_BLUE:?run scripts/gen_env.py}
+      GATEWAY_TOKEN_AUDITOR: ${GATEWAY_TOKEN_AUDITOR:?run scripts/gen_env.py}
+    ports:
+      - "127.0.0.1:8000:8000"
+    depends_on: [audit]
+    networks: [front_net, audit_net, model_net]
+
+  model:
+    profiles: ["llama"]
+    image: ghcr.io/ggml-org/llama.cpp:server-cuda
+    command: ["-m", "/models/qwen2.5-1.5b-instruct-q4_k_m.gguf", "--host", "0.0.0.0", "--port", "8080", "-ngl", "99", "-c", "8192", "--parallel", "2"]
+    volumes:
+      - ./spike/models:/models:ro
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+    networks: [model_net]
+
+networks:
+  front_net: {}
+  audit_net:
+    internal: true
+  model_net:
+    internal: true
+
+volumes:
+  audit_data:

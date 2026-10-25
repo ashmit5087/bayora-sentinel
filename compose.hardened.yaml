@@ -1,0 +1,153 @@
+# HARDENED: the same services as compose.insecure.yaml, locked down.
+# Same probes, same code; only this file changes. The gauntlet shows the difference.
+#
+#   control                                              probe it should satisfy
+#   one internal network per trust zone                  P02, P03, P04
+#   red and blue mount only their own data (read-only)   P01
+#   no runtime socket                                    P05
+#   non-root, cap_drop ALL, read-only root, no-new-privs P06, P07
+#   mem_limit = memswap_limit, pids_limit, cpus          P08, P09
+#   identity from per-tenant tokens only                 P10
+#   workers hold only their own secret (Docker secrets)  P11
+#   audit volume mounted only in the audit service       P12
+#   audit service on an internal network, not the worker's  P13, P14
+#   separate signer holds the Ed25519 key; checkpoints anchor the chain   (tamper demo)
+#   Docker's default seccomp profile (not unconfined)    P15
+#
+# Not claimed: kernel-escape resistance (P16 is out of scope). Docker's default seccomp
+# profile is used; a custom tighter profile is future work.
+#
+# STATUS: syntax-checked with `docker compose config`, not yet run on a Docker daemon.
+name: sentinel-hardened
+
+x-app: &app
+  build: .
+  image: sentinel-app:local
+
+x-locked: &locked
+  user: "10001:10001"
+  read_only: true
+  cap_drop: [ALL]
+  security_opt:
+    - no-new-privileges:true
+  tmpfs:
+    - /tmp:size=16m,mode=1777
+  init: true
+  mem_limit: 256m
+  memswap_limit: 256m                   # equal to mem_limit: swap cannot hide a memory overrun
+  pids_limit: 64
+  cpus: 0.5
+
+services:
+  audit:
+    <<: [*app, *locked]
+    command: ["uvicorn", "--factory", "sentinel.audit.service:create_app_from_env", "--host", "0.0.0.0", "--port", "8100"]
+    environment:
+      AUDIT_CHAIN_PATH: /audit/chain.jsonl
+      AUDIT_WRITE_TOKEN_FILE: /run/secrets/audit_write_token
+      AUDIT_READ_TOKEN_FILE: /run/secrets/audit_read_token
+      AUDIT_CHECKPOINT_PATH: /checkpoints/checkpoints.jsonl
+      AUDIT_PUBLIC_KEY_PATH: /run/secrets/signer_pub
+    secrets: [audit_write_token, audit_read_token, signer_pub]
+    volumes:
+      - audit_data:/audit
+      - checkpoints:/checkpoints:ro     # the audit service can READ checkpoints but never write them
+    networks: [audit_net]
+
+  # The only holder of the signing key, and the only writer of the checkpoint volume.
+  signer:
+    <<: [*app, *locked]
+    command: ["python", "-m", "sentinel.signer.service", "--interval", "5"]
+    environment:
+      AUDIT_URL: http://audit:8100
+      AUDIT_READ_TOKEN_FILE: /run/secrets/audit_read_token
+      SIGNER_KEY_PATH: /run/secrets/signer_key
+      CHECKPOINT_PATH: /checkpoints/checkpoints.jsonl
+    secrets: [audit_read_token, signer_key]
+    volumes:
+      - checkpoints:/checkpoints
+    depends_on: [audit]
+    networks: [audit_net]
+
+  gateway:
+    <<: [*app, *locked]
+    command: ["uvicorn", "--factory", "sentinel.gateway.app:create_app_from_env", "--host", "0.0.0.0", "--port", "8000"]
+    environment:
+      AUTH_MODE: per_tenant
+      CACHE_MODE: isolated
+      AUDIT_FAIL_MODE: closed
+      MODEL_BACKEND: llama
+      LLAMA_URL: http://model:8080
+      AUDIT_URL: http://audit:8100
+      AUDIT_WRITE_TOKEN_FILE: /run/secrets/audit_write_token
+      GATEWAY_TOKEN_RED_FILE: /run/secrets/gateway_token_red
+      GATEWAY_TOKEN_BLUE_FILE: /run/secrets/gateway_token_blue
+      GATEWAY_TOKEN_AUDITOR_FILE: /run/secrets/gateway_token_auditor
+    secrets: [audit_write_token, gateway_token_red, gateway_token_blue, gateway_token_auditor]
+    ports:
+      - "127.0.0.1:28000:8000"
+    depends_on: [audit, model]
+    networks: [red_net, blue_net, audit_net, model_net, host_net]
+
+  model:
+    <<: [*app, *locked]
+    command: ["python", "-m", "sentinel.stubs.http_stub", "--name", "model", "--port", "8080"]
+    networks: [model_net]
+
+  fake-metadata:
+    <<: [*app, *locked]
+    command: ["python", "-m", "sentinel.stubs.http_stub", "--name", "fake-metadata", "--port", "8000"]
+    networks: [meta_net]
+
+  red-worker:
+    <<: [*app, *locked]
+    command: ["sleep", "infinity"]
+    environment:
+      MY_GATEWAY_TOKEN_FILE: /run/secrets/gateway_token_red
+    secrets: [gateway_token_red]
+    volumes:
+      - ./gauntlet_data/red:/data/red:ro
+    networks: [red_net]
+
+  blue-worker:
+    <<: [*app, *locked]
+    command: ["sleep", "infinity"]
+    environment:
+      MY_GATEWAY_TOKEN_FILE: /run/secrets/gateway_token_blue
+    secrets: [gateway_token_blue]
+    volumes:
+      - ./gauntlet_data/blue:/data/blue:ro
+    networks: [blue_net]
+
+networks:
+  red_net:
+    internal: true
+  blue_net:
+    internal: true
+  audit_net:
+    internal: true
+  model_net:
+    internal: true
+  meta_net:
+    internal: true
+  host_net: {}            # only the gateway joins this one, so the host can reach it
+
+secrets:
+  audit_write_token:
+    file: ./secrets/audit_write_token
+  audit_read_token:
+    file: ./secrets/audit_read_token
+  gateway_token_red:
+    file: ./secrets/gateway_token_red
+  gateway_token_blue:
+    file: ./secrets/gateway_token_blue
+  gateway_token_auditor:
+    file: ./secrets/gateway_token_auditor
+  signer_key:
+    file: ./secrets/signer_key
+  signer_pub:
+    file: ./secrets/signer_pub
+
+volumes:
+  audit_data:
+  checkpoints:

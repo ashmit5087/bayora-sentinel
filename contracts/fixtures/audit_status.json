@@ -1,0 +1,12 @@
+{
+  "schema_version": 1,
+  "source": "fixture",
+  "ok": true,
+  "count": 42,
+  "head_hash": "abababababababababababababababababababababababababababababababab",
+  "broken_at": null,
+  "reason": null,
+  "anchored_through": 39,
+  "unanchored_events": 2,
+  "checkpoints_checked": 4
+}

@@ -1,0 +1,96 @@
+# INSECURE ON PURPOSE. This is the "before" picture for the Breakout Gauntlet.
+# Never deploy this. Every weakness below is deliberate and is what a probe tries to exploit.
+#
+#   weakness                                    probe that catches it
+#   one flat network, no segmentation           P02 model reachable, P03 blue worker resolvable, P04 egress
+#   red and blue share one data mount           P01
+#   fake runtime socket mounted                 P05
+#   root user, all capabilities, writable FS    P06, P07
+#   no memory or pid limits                     P08, P09
+#   one shared API key, caller names its tenant P10
+#   every secret injected into the worker env   P11
+#   audit volume mounted into the worker        P12
+#   audit service reachable with a leaked token P13, P14
+#   seccomp disabled                            P15
+#
+# STATUS: syntax-checked with `docker compose config`, not yet run on a Docker daemon.
+name: sentinel-insecure
+
+x-app: &app
+  build: .
+  image: sentinel-app:local
+
+services:
+  audit:
+    <<: *app
+    user: "0"
+    command: ["uvicorn", "--factory", "sentinel.audit.service:create_app_from_env", "--host", "0.0.0.0", "--port", "8100"]
+    environment:
+      AUDIT_CHAIN_PATH: /audit/chain.jsonl
+      AUDIT_WRITE_TOKEN: ${AUDIT_WRITE_TOKEN:?run scripts/gen_env.py}
+      AUDIT_READ_TOKEN: ${AUDIT_READ_TOKEN:?run scripts/gen_env.py}
+    volumes:
+      - audit_data:/audit
+    networks: [flat]
+
+  gateway:
+    <<: *app
+    user: "0"
+    command: ["uvicorn", "--factory", "sentinel.gateway.app:create_app_from_env", "--host", "0.0.0.0", "--port", "8000"]
+    environment:
+      AUTH_MODE: shared_static          # one key for everyone; the caller claims its tenant
+      GATEWAY_SHARED_API_KEY: ${GATEWAY_SHARED_API_KEY:?run scripts/gen_env.py}
+      CACHE_MODE: shared                # no per-tenant cache slots
+      AUDIT_FAIL_MODE: open             # serve requests even when audit is down
+      MODEL_BACKEND: llama
+      LLAMA_URL: http://model:8080
+      AUDIT_URL: http://audit:8100
+      AUDIT_WRITE_TOKEN: ${AUDIT_WRITE_TOKEN:?run scripts/gen_env.py}
+    ports:
+      - "127.0.0.1:18000:8000"
+    depends_on: [audit, model]
+    networks: [flat]
+
+  model:
+    <<: *app
+    user: "0"
+    command: ["python", "-m", "sentinel.stubs.http_stub", "--name", "model", "--port", "8080"]
+    networks: [flat]
+
+  fake-metadata:
+    <<: *app
+    user: "0"
+    command: ["python", "-m", "sentinel.stubs.http_stub", "--name", "fake-metadata", "--port", "8000"]
+    networks: [flat]
+
+  red-worker:
+    <<: *app
+    user: "0"
+    init: true
+    command: ["sleep", "infinity"]
+    env_file: .env                      # leaks EVERY secret into the attacker's environment
+    environment:
+      MY_GATEWAY_TOKEN: ${GATEWAY_SHARED_API_KEY:?run scripts/gen_env.py}
+    volumes:
+      - ./gauntlet_data:/data           # red AND blue data in one mount
+      - audit_data:/audit               # audit volume exposed
+      - ./decoy/docker.sock:/var/run/docker.sock   # DECOY file, not a real socket
+    security_opt:
+      - seccomp=unconfined
+    networks: [flat]
+
+  blue-worker:
+    <<: *app
+    user: "0"
+    init: true
+    command: ["sleep", "infinity"]
+    env_file: .env
+    volumes:
+      - ./gauntlet_data:/data
+    networks: [flat]
+
+networks:
+  flat: {}
+
+volumes:
+  audit_data:

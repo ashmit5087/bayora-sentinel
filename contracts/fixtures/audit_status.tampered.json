@@ -1,0 +1,12 @@
+{
+  "schema_version": 1,
+  "source": "fixture",
+  "ok": false,
+  "count": 42,
+  "head_hash": "abababababababababababababababababababababababababababababababab",
+  "broken_at": 17,
+  "reason": "hash mismatch (record content was modified)",
+  "anchored_through": null,
+  "unanchored_events": null,
+  "checkpoints_checked": 0
+}
