@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import statistics
 import sys
 from pathlib import Path
 
@@ -32,13 +33,24 @@ def convert(timing: dict, model: str) -> dict:
         m = timing["modes"].get(name)
         if not m:
             continue
-        s = dict(m["stats"])
+        s = dict(m.get("stats") or {})
+        hit_ms = m.get("hit_ms") or []
+        miss_ms = m.get("miss_ms") or []
+        if not hit_ms and not miss_ms:
+            continue
         # Older recordings scored only the "hit is faster" direction; rescore in both so a reversed signal is not hidden.
-        s["best_threshold_accuracy"] = max(s["best_threshold_accuracy"], _timing().best_threshold_accuracy(m["hit_ms"], m["miss_ms"]))
+        s["best_threshold_accuracy"] = max(
+            s.get("best_threshold_accuracy", 0.0),
+            _timing().best_threshold_accuracy(hit_ms, miss_ms),
+        )
+        median_probe_latency_ms = m.get("median_probe_latency_ms")
+        if median_probe_latency_ms is None:
+            values = hit_ms + miss_ms
+            median_probe_latency_ms = statistics.median(values) if values else 0.0
         modes.append(SideChannelMode(
-            mode=name, hit_ms=m["hit_ms"], miss_ms=m["miss_ms"], auc_hit_faster=s["auc_hit_faster"],
-            best_threshold_accuracy=s["best_threshold_accuracy"], cohens_d=s["cohens_d"], perm_p=s.get("perm_p"),
-            median_probe_latency_ms=m["median_probe_latency_ms"],
+            mode=name, hit_ms=hit_ms, miss_ms=miss_ms, auc_hit_faster=float(s["auc_hit_faster"]),
+            best_threshold_accuracy=float(s["best_threshold_accuracy"]), cohens_d=float(s.get("cohens_d", 0.0)),
+            perm_p=s.get("perm_p"), median_probe_latency_ms=float(median_probe_latency_ms),
         ))
     if not modes:
         sys.exit("timing.json has no modes")

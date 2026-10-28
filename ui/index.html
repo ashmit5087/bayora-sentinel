@@ -13,6 +13,154 @@
     <meta name="twitter:title" content="Bayora Sentinel — We attack our own AI lab" />
     <meta name="twitter:description" content="A secure AI red-team lab showcase. We never claim secure, only what held." />
     <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white'%3E%3Cg transform='rotate(-30 12 12)'%3E%3Ccircle cx='7.3' cy='3.2' r='1.45'/%3E%3Crect x='5.5' y='4.7' width='3.6' height='14.6' rx='1.8'/%3E%3Crect x='14.9' y='4.7' width='3.6' height='14.6' rx='1.8'/%3E%3Ccircle cx='16.7' cy='20.8' r='1.45'/%3E%3C/g%3E%3C/svg%3E" />
+    <style>
+      #top [data-testid="link-enter-lab"],
+      #top [data-testid="link-see-results"] {
+        position: relative;
+        z-index: 1;
+        transform: translateY(clamp(1.5rem, 5vh, 3.25rem));
+      }
+
+      [data-testid="status-header-api"] {
+        display: none;
+      }
+
+      #top .hero-stat {
+        display: flex;
+        flex: 1 1 0;
+        min-width: 0;
+        align-items: flex-start;
+        gap: 0.75rem;
+        font-size: clamp(0.9rem, 1.25vw, 1.15rem);
+        line-height: 1.45;
+      }
+
+      #top .hero-stat > span {
+        min-width: 0;
+        max-width: 22rem;
+      }
+
+      #top .hero-stat .font-semibold {
+        font-size: clamp(1.7rem, 2.8vw, 2.6rem);
+        line-height: 0.95;
+        margin-right: 0.2rem;
+      }
+
+      #top .hero-stat-icon {
+        flex: 0 0 1.2rem;
+        width: 1.2rem;
+        height: 1.2rem;
+        margin-top: 0.2rem;
+      }
+
+      #top > div.relative.mx-auto {
+        padding-bottom: clamp(9rem, 19vh, 13rem);
+      }
+
+      #top h1.hero-heading + p {
+        max-width: 48rem;
+        margin-left: auto;
+        margin-right: auto;
+        text-align: center;
+        font-size: clamp(0.95rem, 1.35vw, 1.1rem);
+        line-height: 1.75;
+        letter-spacing: 0;
+        color: #d0d2cf;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 2;
+        overflow: hidden;
+      }
+
+      @media (max-width: 767px) {
+        #top .hero-stat {
+          flex-basis: 100%;
+        }
+
+        #top .hero-stat > span {
+          max-width: 28rem;
+        }
+
+        #top h1.hero-heading + p {
+          margin-left: auto;
+          max-width: 36rem;
+        }
+
+        #top > div.relative.mx-auto {
+          padding-bottom: 11rem;
+        }
+      }
+
+      #top div:has(> h1.hero-heading) > div:first-child {
+        background: transparent;
+        padding: 0;
+        box-shadow: none;
+        font-size: 0;
+        display: block;
+        width: fit-content;
+        margin-left: clamp(0rem, 5vw, 4.5rem);
+        text-align: left;
+        animation: sentinel-tech-intro 1.8s ease-out both;
+      }
+
+      #top div:has(> h1.hero-heading) > div:first-child svg {
+        display: none;
+      }
+
+      #top div:has(> h1.hero-heading) > div:first-child::after {
+        content: "Secure AI red-team Lab";
+        color: #f2f2f2;
+        font-family: "Instrument Serif", Georgia, serif;
+        font-size: clamp(1.7rem, 3.2vw, 2.8rem);
+        font-style: italic;
+        letter-spacing: 0.02em;
+        text-shadow: 0 2px 18px rgba(0, 0, 0, 0.45);
+        white-space: nowrap;
+        position: relative;
+      }
+
+      #top div:has(> h1.hero-heading) > div:first-child::before {
+        content: "";
+        display: block;
+        width: 4.5rem;
+        height: 1px;
+        margin-bottom: 0.7rem;
+        background: linear-gradient(90deg, #a1ebc9, transparent);
+        transform-origin: left;
+        animation: sentinel-tech-line 1.4s ease-out 0.2s both;
+      }
+
+      @keyframes sentinel-tech-intro {
+        from {
+          opacity: 0;
+          transform: translateX(-1.5rem);
+          filter: blur(5px);
+        }
+        to {
+          opacity: 1;
+          transform: translateX(0);
+          filter: blur(0);
+        }
+      }
+
+      @keyframes sentinel-tech-line {
+        from {
+          opacity: 0;
+          transform: scaleX(0);
+        }
+        to {
+          opacity: 1;
+          transform: scaleX(1);
+        }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        #top div:has(> h1.hero-heading) > div:first-child,
+        #top div:has(> h1.hero-heading) > div:first-child::before {
+          animation: none;
+        }
+      }
+    </style>
     <script type="module" crossorigin src="/assets/index-CJMl82iM.js"></script>
     <link rel="stylesheet" crossorigin href="/assets/index-Ca0vbpek.css">
   </head>

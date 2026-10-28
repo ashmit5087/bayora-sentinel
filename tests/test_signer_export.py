@@ -114,6 +114,18 @@ def test_convert_timing_produces_a_contract_valid_run():
     assert run["modes"][0]["perm_p"] == 0.0002 and any("not a proof" in c for c in run["caveats"])
 
 
+def test_convert_timing_accepts_gateway_shape_without_mode_latency_top_level():
+    sys.path.insert(0, str(ROOT / "scripts"))
+    import convert_timing
+
+    timing = {"meta": {"generated_at": "2026-10-23T05:00:00+00:00", "trials_per_mode": 2},
+              "modes": {"isolated": {"hit_ms": [50.0, 52.0], "miss_ms": [48.0, 46.0],
+                                     "stats": {"auc_hit_faster": 0.5, "best_threshold_accuracy": 0.6, "cohens_d": 0.1, "perm_p": 0.9}}}}
+    run = convert_timing.convert(timing, "gateway-shape")
+    assert run["modes"][0]["mode"] == "isolated"
+    assert run["modes"][0]["median_probe_latency_ms"] == 49.0
+
+
 def test_signer_error_messages_tell_network_and_file_problems_apart():
     import urllib.error
     from sentinel.signer.service import describe_failure
